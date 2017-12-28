@@ -1,31 +1,25 @@
-/**
- * Created by Ozgen on 9/7/16.
- */
-// main start of the server
-
+// Main starting point of the application
 const express = require('express');
 const http = require('http');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const app = express();
 const router = require('./router');
 const mongoose = require('mongoose');
 const cors = require('cors');
-var app = express();
-app.use(cors());
+mongoose.Promise = global.Promise;
 
+// DB Setup mongodb://username:password@host:port/database?
+mongoose.connect('mongodb://localhost/auth', {useMongoClient: true});
 
-//DB setup
-
-mongoose.connect('mongodb://localhost:auth/auth');
-
-// app setup
+// App Setup
 app.use(morgan('combined'));
+app.use(cors());
 app.use(bodyParser.json({type: '*/*'}));
 router(app);
 
-//server setup
-
-const port = process.env.PORT || 3000;
+// Server Setup
+const port = process.env.PORT || 3090;
 const server = http.createServer(app);
 server.listen(port);
-console.log('server is start on:', port);
+console.log('Server listening on:', port);
